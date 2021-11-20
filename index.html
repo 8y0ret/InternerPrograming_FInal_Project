@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>연극 map</title>
+    </head>
+    <body>
+        
+        <div class ="contents">
+            <h1 class="title">연극 목록</h3>
+            <h3 class="show_range"></h3>
+            <ul class="theater_data"></ul>
+        </div>
+
+        <script>
+            // 어제 날짜 구함
+            let y = ( d => new Date(d.setDate(d.getDate() -1)))(new Date);
+            const yesterday = y;
+
+            // 날짜 표시해줌
+            showRange = document.querySelector(".show_range");
+            y = y.getFullYear() + "." + (y.getMonth()+1) + "." + (y.getDate()+1);
+            showRange.textContent = y + "~ 기간 연극 목록입니다."
+
+            // url 공통 요소
+            const proxy = 'https://busan-show.herokuapp.com/';
+            const apiKey = '%2BMwoImVBufryP3wsc0KZ6Qbfvzvh9Nqx%2F3ym3z36FjYfvZdZKF5U1t8JwWVA9yFisGJkExRr6%2BGuUIoXY71wMw%3D%3D';
+            const resultType = 'json';
+
+            ///////////////////////// 연극 /////////////////////////
+            // 한 페이지에 모든 데이터 표시되도록 함
+            let numOfRows = 1000;
+            // 연극 api url 
+            const theaterUrl = proxy + 'http://apis.data.go.kr/6260000/BusanCulturePlayDetailService/getBusanCulturePlayDetail?serviceKey=' + apiKey + '&numOfRows=500&pageNo=1&resultType=' + resultType;
+
+            // 쿼리 지정
+            dataPane = document.querySelector(".theater_data"); 
+
+            // sample code 활용
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', theaterUrl);
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4) {
+
+                    // Json 파싱
+                    const theaterObj = JSON.parse(xhr.response) ;
+
+                    // 세부 내용 담긴 객체
+                    const theaterItem = theaterObj['getBusanCulturePlayDetail']['item'];
+
+                    // 세부 내용 가져오기
+                    for(i=0; i<=numOfRows; i++) {
+                        const theaterItemSelect = theaterItem[i]; 
+
+                        // 연극 종료일 지난 것 제외함
+                        var endDateItem = theaterItemSelect.op_ed_dt;
+                        var endDateArr = endDateItem.split("-");
+                        var endDate = new Date(endDateArr[0], endDateArr[1]-1, endDateArr[2]);
+
+                        var calDate = endDate.getTime() - yesterday.getTime();
+                        if(calDate > 0) {
+                                // 내용에 따라 필요한 DOM 생성
+                                let myLi = document.createElement('li');
+                                let myDiv = document.createElement('Div');
+                                let mh3 = document.createElement('h3');
+                                let when = document.createElement('p');
+                                let showTime = document.createElement('p');
+                                let where = document.createElement('p');
+                                let price = document.createElement('p');
+                                // DOM에 내용 추가
+                                mh3.textContent = theaterItemSelect.title;
+                                when.textContent = "상영 기간: ~" + theaterItemSelect.op_ed_dt;
+                                showTime.textContent = "관람 회차: " + theaterItemSelect.showtime;
+                                price.textContent = "가격: " + theaterItemSelect.price;
+                                where.textContent = "장소: " + theaterItemSelect.place_nm;
+                                // DOM 추가
+                                dataPane.appendChild(myLi);
+                                myLi.appendChild(myDiv);
+                                myDiv.appendChild(mh3);
+                                myDiv.appendChild(when);
+                                myDiv.appendChild(showTime);
+                                myDiv.appendChild(price);
+                                myDiv.appendChild(where);
+                            
+                            // 세부 내용 확인용도 console
+                                //console.log(theaterItemSelect.showtime);
+                        }   
+                    }
+                }
+            };
+            xhr.send('');
+        </script>
+    </body>
+</html>

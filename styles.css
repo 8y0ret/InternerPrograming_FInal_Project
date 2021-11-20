@@ -1,0 +1,10 @@
+* {
+    box-sizing: border-box;
+}
+
+
+.contents{
+    width: 500px;
+    padding: 5px;
+    border: 3px solid black;
+}
