@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="styles.css">
-        <title>연극 map</title>
+        <title>전시 map</title>
     </head>
     <body>
         <div class="dropdown">
@@ -16,7 +16,7 @@
         </div>
         
         <div class="titles">
-            <h1 class="title">연극 목록</h3>
+            <h1 class="title">전시 목록</h3>
             <h3 class="show_range"></h3>
         </div> 
         <div class ="contents">
@@ -25,7 +25,6 @@
 
         <script>
             ///////////////////////// 공통 /////////////////////////
-
             // 드롭다운
             function makeDrop() {
                 // show or not show
@@ -58,36 +57,40 @@
             // 날짜 표시해줌
             showRange = document.querySelector(".show_range");
             y = y.getFullYear() + "." + (y.getMonth()+1) + "." + (y.getDate()+1);
-            showRange.textContent = y + "~ 기간 연극 목록입니다."
+            showRange.textContent = y + "~ 기간 전시 목록입니다."
 
-            ///////////////////////// 연극 /////////////////////////
+            ///////////////////////// 전시 /////////////////////////
             // 한 페이지에 모든 데이터 표시되도록 함
             let numOfRows = 1000;
-            // 연극 api url 
-            const theaterUrl = proxy + 'http://apis.data.go.kr/6260000/BusanCulturePlayDetailService/getBusanCulturePlayDetail?serviceKey=' + apiKey + '&numOfRows=' + numOfRows + '&pageNo=1&resultType=' + resultType;
+            // api url 
+            const exhibitionUrl = proxy + 'http://apis.data.go.kr/6260000/BusanCultureExhibitDetailService/getBusanCultureExhibitDetail?serviceKey=' + apiKey + '&numOfRows=' + numOfRows + '&pageNo=1&resultType=' + resultType;
 
             // 쿼리 지정
             dataPane = document.querySelector(".theater_data"); 
 
             // sample code 활용
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', theaterUrl);
+            xhr.open('GET', exhibitionUrl);
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4) {
 
                     // Json 파싱
-                    const theaterObj = JSON.parse(xhr.response) ;
+                    const theaterObj = JSON.parse(xhr.response);
+                        //요소 확인용 console
+                        //console.log(theaterObj);
 
                     // 세부 내용 담긴 객체
-                    const theaterItem = theaterObj['getBusanCulturePlayDetail']['item'];
-
+                    const theaterItem = theaterObj['getBusanCultureExhibitDetail']['item'];
+                        
                     // 세부 내용 가져오기
                     for(i=0; i<=numOfRows; i++) {
                         const theaterItemSelect = theaterItem[i]; 
 
                         // 종료일 지난 것 제외함
                         var endDateItem = theaterItemSelect.op_ed_dt;
-                        var endDateArr = endDateItem.split("-");
+                        if( endDateItem != null) {
+                            var endDateArr = endDateItem.split("-");
+                        }
                         var endDate = new Date(endDateArr[0], endDateArr[1]-1, endDateArr[2]);
 
                         var calDate = endDate.getTime() - yesterday.getTime();
@@ -115,7 +118,7 @@
                                 myDiv.appendChild(price);
                                 myDiv.appendChild(where);
                             
-                            // 세부 내용 확인용도 console
+                            // 세부 내용 확인용 console
                                 //console.log(theaterItemSelect.showtime);
                         }   
                     }

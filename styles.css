@@ -2,9 +2,51 @@
     box-sizing: border-box;
 }
 
+/* 드롭다운 */
+.dropdown {
+    width: 100px;
+}
 
+.dropbtn {
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: rgba(0, 0, 0, 0.795);
+}
+
+.dropdown_content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    overflow: auto;
+    box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+.dropdown_content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown_content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.show {
+    display: block;
+}
+
+/* 데이터 */
 .contents{
     width: 500px;
     padding: 5px;
-    border: 3px solid black;
+    border: 2px solid black;
 }
